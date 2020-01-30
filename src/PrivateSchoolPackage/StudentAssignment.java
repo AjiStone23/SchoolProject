@@ -7,42 +7,35 @@ package PrivateSchoolPackage;
 
 import java.time.LocalDate;
 
-
 /**
  *
  * @author ajist
  */
 public class StudentAssignment {
 
-private final	CourseAssignment assignment;
-private	boolean submited;
-private	LocalDate subDateTime;
-private	int oralMark;
-private	int totalMark;
+	private final CourseAssignment assignment;
+	private boolean submited;
+	private LocalDate subDateTime;
+	private int oralMark;
+	private int totalMark;
 
 	public StudentAssignment(CourseAssignment assignment) {
 		this.assignment = assignment;
 	}
-	
-	
-	public void submitAssignment(){
-		
-		LocalDate now=LocalDate.now();
-		if(this.assignment.getDeadLine().compareTo(now)>=0) {
-			this.submited=true;
-			this.subDateTime=now;
+
+	public void submitAssignment() {
+
+		LocalDate now = LocalDate.now();
+		if (this.assignment.getDeadLine().compareTo(now) >= 0) {
+			this.submited = true;
+			this.subDateTime = now;
 		}
-	
-		
-			
-		
+
 	}
 
 	public CourseAssignment getAssignment() {
 		return assignment;
 	}
-
-	
 
 	public boolean isSubmited() {
 		return submited;
@@ -75,11 +68,10 @@ private	int totalMark;
 	}
 
 	public boolean setTotalMark(int totalMark) {
-		if(totalMark>=0 && totalMark<=this.assignment.getMaxTotalMark()){
-			this.totalMark=totalMark;
-					return true;
-		}
-		else{
+		if (totalMark >= 0 && totalMark <= this.assignment.getMaxTotalMark()) {
+			this.totalMark = totalMark;
+			return true;
+		} else {
 			return false;
 		}
 	}
@@ -87,8 +79,6 @@ private	int totalMark;
 	public LocalDate getSubDateTime() {
 		return subDateTime;
 	}
-	
-	
 
 	@Override
 	public int hashCode() {

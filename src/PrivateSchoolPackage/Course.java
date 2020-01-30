@@ -15,31 +15,38 @@ import java.util.Objects;
  *
  * @author ajist
  */
-public class Course implements IschoolObject{
+public class Course {
 
-	private String title;
+	private String courseTitle;
 	private LocalDate start_Date;
 	private LocalDate end_Date;
 	private HashSet<CourseAssignment> courseAssignments;
 	private HashSet< Stream> streams;
 	private TimeType timetype;
-	private int CourseCode;
+	private int courseId;
+
+	public Course(String courseTitle, LocalDate start_Date, LocalDate end_Date, int courseId) {
+		this.courseTitle = courseTitle;
+		this.start_Date = start_Date;
+		this.end_Date = end_Date;
+		this.courseId = courseId;
+	}
 
 	public Course(String title, LocalDate start_Date, LocalDate end_Date) {
-		this.title = title;
+		this.courseTitle = title;
 		this.start_Date = start_Date;
 		this.end_Date = end_Date;
 		this.courseAssignments = new HashSet<>();
 		this.streams = new HashSet<>();
-		this.CourseCode= this.hashCode();
+
 	}
 
-	public String getTitle() {
-		return title;
+	public String getCourseTitle() {
+		return courseTitle;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setCourseTitle(String courseTitle) {
+		this.courseTitle = courseTitle;
 	}
 
 	public LocalDate getStart_Date() {
@@ -83,14 +90,9 @@ public class Course implements IschoolObject{
 	}
 
 	@Override
-	public int getSchoolObjectCode() {
-		return CourseCode;
-	}
-
-	@Override
 	public int hashCode() {
 		int hash = 7;
-		hash = 97 * hash + Objects.hashCode(this.title);
+		hash = 97 * hash + Objects.hashCode(this.courseTitle);
 		return hash;
 	}
 
@@ -106,7 +108,7 @@ public class Course implements IschoolObject{
 			return false;
 		}
 		final Course other = (Course) obj;
-		if (!Objects.equals(this.title, other.title)) {
+		if (!Objects.equals(this.courseTitle, other.courseTitle)) {
 			return false;
 		}
 		return true;
@@ -115,15 +117,8 @@ public class Course implements IschoolObject{
 
 	@Override
 	public String toString() {
-		
-		Iterator<Stream> it = streams.iterator();
-		ArrayList<String> streamNames= new ArrayList<>();
-     while(it.hasNext()){
-        streamNames.add(it.next().getStreamTitle());
-     }
-		return "Course{" + "title=" + title + ", start_Date=" + start_Date + ", end_Date=" + end_Date + ", streams=" + streamNames + ", timetype=" + timetype + ", CourseCode=" + CourseCode + '}';
+		return "Course{" + "courseTitle=" + courseTitle + ", start_Date=" + start_Date + ", end_Date=" + end_Date + ", timetype=" + timetype + ", courseId=" + courseId + '}';
 	}
-	
 
 	public boolean addToStream(Stream stream) {
 
@@ -133,9 +128,13 @@ public class Course implements IschoolObject{
 
 	}
 
-	public boolean addAssignment(CourseAssignment assignment,HashSet<ClassRoom> classrooms) {
-		return assignment.addToCourse(this,classrooms);
+	public boolean addAssignment(CourseAssignment assignment, HashSet<ClassRoom> classrooms) {
+		return assignment.addToCourse(this, classrooms);
 
+	}
+
+	public int getCourseId() {
+		return courseId;
 	}
 
 }

@@ -5,7 +5,9 @@
  */
 package privateschoolproject;
 
+
 import Menu.Menu;
+
 
 /**
  *
@@ -17,7 +19,8 @@ public class PrivateSchoolProject {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-
+		
+		
 		Menu.start();
 
 	}

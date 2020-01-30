@@ -13,21 +13,30 @@ import java.util.Objects;
  *
  * @author ajist
  */
-public class CourseAssignment implements IschoolObject{
-	
-private	String title;
-private	String description;
-private	LocalDate deadLine;
-private	int maxOralMark;
-private	int maxTotalMark;
-private int CourseAssignmentCode;
+public class CourseAssignment {
+
+	private String title;
+	private String description;
+	private LocalDate deadLine;
+	private int maxOralMark;
+	private int maxTotalMark;
+	private int CourseAssignmentId;
+
+	public CourseAssignment(String title, String description, LocalDate deadLine, int maxOralMark, int maxTotalMark, int CourseAssignmentId) {
+		this.title = title;
+		this.description = description;
+		this.deadLine = deadLine;
+		this.maxOralMark = maxOralMark;
+		this.maxTotalMark = maxTotalMark;
+		this.CourseAssignmentId = CourseAssignmentId;
+	}
 
 	public CourseAssignment(String title, LocalDate deadLine) {
 		this.title = title;
 		this.deadLine = deadLine;
-		this.maxOralMark=20;
-		this.maxTotalMark=100;
-		this.CourseAssignmentCode= this.hashCode();
+		this.maxOralMark = 20;
+		this.maxTotalMark = 100;
+
 	}
 
 	public String getTitle() {
@@ -70,12 +79,6 @@ private int CourseAssignmentCode;
 		this.maxTotalMark = maxTotalMark;
 	}
 
-@Override
-	public int getSchoolObjectCode() {
-		return CourseAssignmentCode;
-	}
-	
-
 	@Override
 	public int hashCode() {
 		int hash = 5;
@@ -107,26 +110,25 @@ private int CourseAssignmentCode;
 
 	@Override
 	public String toString() {
-		return "CourseAssignment{" + "title=" + title + ", deadLine=" + deadLine + ", maxOralMark=" + maxOralMark + ", maxTotalMark=" + maxTotalMark + ", CourseAssignmentCode=" + CourseAssignmentCode + '}';
+		return "CourseAssignment{" + "title=" + title + ", deadLine=" + deadLine + ", maxOralMark=" + maxOralMark + ", maxTotalMark=" + maxTotalMark + ", CourseAssignmentCode=" + CourseAssignmentId + '}';
 	}
-	
 
-	
-	
-	public boolean addToCourse(Course course,HashSet<ClassRoom> classrooms){
-		
-		for (ClassRoom room: classrooms) {
-			if(room.getTheCourse().equals(course))
+	public boolean addToCourse(Course course, HashSet<ClassRoom> classrooms) {
+
+		for (ClassRoom room : classrooms) {
+			if (room.getTheCourse().equals(course)) {
 				for (Student st : room.getStudents()) {
 					st.updateAssignments(this);
-					
+
 				}
-			
-			
-			
+			}
+
 		}
 		return course.getCourseAssignments().add(this);
 	}
-	
-	
+
+	public int getCourseAssignmentId() {
+		return CourseAssignmentId;
+	}
+
 }

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Menu;
+package ManipulateData;
 
-
+import JavaConnectionWithSql.DBUtils;
 import PrivateSchoolPackage.ClassRoom;
 import PrivateSchoolPackage.Course;
 import PrivateSchoolPackage.CourseAssignment;
@@ -15,30 +15,28 @@ import PrivateSchoolPackage.Student;
 import PrivateSchoolPackage.Subject;
 import PrivateSchoolPackage.TimeType;
 import PrivateSchoolPackage.Trainer;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.EnumSet;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author ajist
  */
 public class CreateDataFromUserInput {
-	
+
 	private static PrivateSchool theSchool;
 
-	
-	
 	public static PrivateSchool getTheSchool() {
 		return theSchool;
 	}
-	
-	
-	
-	
-	
+
 	public static void createPrivateSchool() {
 
 		Scanner sc = new Scanner(System.in);
@@ -49,8 +47,8 @@ public class CreateDataFromUserInput {
 
 	}
 
-	public static void createStudent(PrivateSchool theSchool) {
-		
+	public static void createStudent() {
+
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\n\nCREATE STUDENT "
 				+ "\n******************");
@@ -65,29 +63,45 @@ public class CreateDataFromUserInput {
 		LocalDate beforeThisDate = LocalDate.of(2014, 1, 1);
 
 		LocalDate dateOfBirth = Validator.loopAndGetValidDate(sc, d -> d.isAfter(afterThisDate) && d.isBefore(beforeThisDate));
-		Student st = new Student(firstName, lastName, dateOfBirth);
-		if (theSchool.getSchoolPopulation().add(st) == false) {
-			System.out.println("This person has already been created!");
-			return;
+		Student student = new Student(firstName, lastName, dateOfBirth);
+		System.out.println("\nEnter the fees of the student (e.g. 500.0)");
+		float fees = Validator.loopAndGetValidFloat(sc, f -> f >= 0.0 && f <= 99999999.99);
+		student.setTuitionFees(fees);
+
+		DBUtils.createConnection();
+		int n = 0;
+		Statement st;
+		try {
+
+			st = DBUtils.getConn().createStatement();
+			n = st.executeUpdate("insert into student(firstName,lastName,dateOfBirth,tuitionfees)values ('" + student.getFirstName() + "','" + student.getLastName() + "','" + student.getDateOfBirth() + "','" + student.getTuitionFees() + "')");
+			DBUtils.getConn().close();
+
+		} catch (SQLException ex) {
+			System.out.println("SQL ex");
+
 		}
-		theSchool.getSchoolPopulation().add(st);
-		theSchool.getSchoolStudents().add(st);
+
+		if (n == 0) {
+			System.out.println("This Student has already been created!");
+			return;
+		} else {
+			System.out.println("Success");
+		}
 
 		System.out.println("\nStudent created.");
-		System.out.println(st);
-		System.out.println("\nEnter the fees of the student (e.g. 500.0)");
-		float fees = Validator.loopAndGetValidFloat(sc, f -> f >= 0.0);
-		st.setTuitionFees(fees);
+		System.out.println(student);
 
 		System.out.println("\nDo you want to create another Student? y/n");
 		String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
 		if (createAgain.equals("y")) {
-			createStudent(theSchool);
+			createStudent();
 		}
 
 	}
 
-	public static void createTrainer(PrivateSchool theSchool) {
+	public static void createTrainer() {
+
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\n\nCREATE TRAINER "
 				+ "\n******************");
@@ -102,35 +116,51 @@ public class CreateDataFromUserInput {
 		LocalDate beforeThisDate = LocalDate.of(2004, 1, 1);
 
 		LocalDate dateOfBirth = Validator.loopAndGetValidDate(sc, d -> d.isAfter(afterThisDate) && d.isBefore(beforeThisDate));
-		Trainer tr = new Trainer(firstName, lastName, dateOfBirth);
-		if (theSchool.getSchoolPopulation().add(tr) == false) {
-			System.out.println("This person has already been created!");
-			return;
-		}
-		theSchool.getSchoolPopulation().add(tr);
-		theSchool.getSchoolTrainers().add(tr);
-
-		System.out.println("\nTrainer created.");
-		System.out.println(tr);
+		Trainer trainer = new Trainer(firstName, lastName, dateOfBirth);
 
 		System.out.println("Choose the subject of the Trainer");
 		System.out.println("1) " + Subject.COMPUTER_SCIENCE);
 		System.out.println("2) " + Subject.MATH);
 		int input = Validator.loopAndGetValidInt(sc, (i) -> i.equals(1) || i.equals(2));
 		if (input == 1) {
-			tr.setSubject(Subject.COMPUTER_SCIENCE);
+			trainer.setSubject(Subject.COMPUTER_SCIENCE);
 		}
-		tr.setSubject(Subject.MATH);
+		trainer.setSubject(Subject.MATH);
+
+		DBUtils.createConnection();
+		int n = 0;
+		Statement st;
+		try {
+
+			st = DBUtils.getConn().createStatement();
+			n = st.executeUpdate("insert into trainer(firstName,lastName,dateOfBirth,subjectId)values ('" + trainer.getFirstName() + "','" + trainer.getLastName() + "','" + trainer.getDateOfBirth() + "','" + input + "')");
+			DBUtils.getConn().close();
+
+		} catch (SQLException ex) {
+			System.out.println("SQL ex");
+			return;
+		}
+
+		if (n == 0) {
+			System.out.println("This trainer has already been created!");
+			return;
+		} else {
+			System.out.println("Success");
+		}
+
+		System.out.println("\nTrainer created.");
+		System.out.println(trainer);
 
 		System.out.println("\nDo you want to create another Trainer? y/n");
 		String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
 		if (createAgain.equals("y")) {
-			createTrainer(theSchool);
+			createTrainer();
 		}
 
 	}
 
-	public static void createCourse(PrivateSchool theSchool) {
+	public static void createCourse() {
+
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\n\nCREATE COURSE "
 				+ "\n******************");
@@ -145,32 +175,49 @@ public class CreateDataFromUserInput {
 		System.out.println("Enter the ending date of the Course  yyyy-MM-dd(e.g.2020-05-28)");
 
 		LocalDate endDate = Validator.loopAndGetValidDate(sc, d -> d.isAfter(startingDate.minusDays(1)));
-		Course cr = new Course(courseTitle, startingDate, endDate);
-		if (theSchool.getSchoolCourses().add(cr) == false) {
-			System.out.println("\nThis course has already been created!");
-			return;
-		}
-		System.out.println("\nCourse created.");
-		System.out.println(cr);
+		Course course = new Course(courseTitle, startingDate, endDate);
 
 		System.out.println("\nChoose the Timetype of the Course");
 		System.out.println("1) " + TimeType.FULL_TIME);
 		System.out.println("2) " + TimeType.PART_TIME);
 		int input = Validator.loopAndGetValidInt(sc, (i) -> i.equals(1) || i.equals(2));
 		if (input == 1) {
-			cr.setTimetype(TimeType.FULL_TIME);
+			course.setTimetype(TimeType.FULL_TIME);
 		}
-		cr.setTimetype(TimeType.PART_TIME);
+		course.setTimetype(TimeType.PART_TIME);
+
+		DBUtils.createConnection();
+		int n = 0;
+		Statement st;
+		try {
+
+			st = DBUtils.getConn().createStatement();
+			n = st.executeUpdate("insert into course(coursetitle,start_Date,end_Date,timeTypeId)values ('" + course.getCourseTitle() + "','" + course.getStart_Date() + "','" + course.getEnd_Date() + "','" + input + "')");
+			DBUtils.getConn().close();
+
+		} catch (SQLException ex) {
+			System.out.println("SQL ex");
+			return;
+		}
+
+		if (n == 0) {
+			System.out.println("This course has already been created!");
+			return;
+		} else {
+			System.out.println("Success");
+		}
+
+		System.out.println("\nCourse created.");
+		System.out.println(course);
 
 		System.out.println("\nDo you want to create another Course? y/n");
 		String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
 		if (createAgain.equals("y")) {
-			createCourse(theSchool);
+			createCourse();
 		}
-
 	}
 
-	public static void createAssignment(PrivateSchool theSchool) {
+	public static void createAssignment() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\n\nCREATE ASSIGNMENT "
 				+ "\n******************");
@@ -185,33 +232,63 @@ public class CreateDataFromUserInput {
 		Set<DayOfWeek> weekend = EnumSet.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
 		LocalDate deadline = Validator.loopAndGetValidDate(sc, d -> d.isAfter(afterThisDate) && !(weekend.contains(d.getDayOfWeek())));
-		CourseAssignment ca = new CourseAssignment(assignmentTitle, deadline);
-		if (theSchool.getAssignments().add(ca) == false) {
-			System.out.println("\nThis Assignment has already been created!");
-			System.out.println("\nDo you want to create another Assignment? y/n");
+		CourseAssignment ass = new CourseAssignment(assignmentTitle, deadline);
+
+		System.out.println("\nType an Assignment description");
+		String description = Validator.loopAndGetValidString(sc, s -> s.trim().matches("[a-z A-Z_0-9]{1,150}"));
+		ass.setDescription(description);
+
+		System.out.println("Choose a Course to add the assignment to,deadline of the assignment must be between start date and end date of the course");
+		 Course course= ChooseAndAssign.chooseAndGetCourse();
+		
+		if (course == null) {
+			System.out.println("No course found");
+			System.out.println("\nDo you want to create a Course? y/n");
 			String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
 			if (createAgain.equals("y")) {
-				createAssignment(theSchool);
+
+				CreateDataFromUserInput.createCourse();
+				System.out.println("Choose a Course to add the assignment to,deadline of the assignment must be between start date and end date of the course");
+				course = ChooseAndAssign.chooseAndGetCourse();
+
+			} else {
+				return;
 			}
+
+		}
+		
+		DBUtils.createConnection();
+		int n = 0;
+		Statement st;
+		try {
+
+			st = DBUtils.getConn().createStatement();
+			n = st.executeUpdate("insert into courseassignment (assignmentTitle,assignmentDescription,deadline,maxOralMark,maxTotalMark,courseId) values ('" + ass.getTitle() + "','" + ass.getDescription() + "','" + ass.getDeadLine() + "'," + 30 + "," + 100 + ","+course.getCourseId()+")");                  
+			DBUtils.getConn().close();
+
+		} catch (SQLException ex) {
+			System.out.println("SQL ex");
+		}
+
+		if (n == 0) {
+			System.out.println("Wrong deadline or duplicate assignment!");
 			return;
+		} else {
+			System.out.println("Success");
 		}
 
 		System.out.println("\nAssignment created.");
-		System.out.println(ca);
-
-		System.out.println("\nType an Assignment description");
-		String description = sc.nextLine();
-		ca.setDescription(description);
+		System.out.println(ass);
 
 		System.out.println("\nDo you want to create another Assignment? y/n");
 		String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
 		if (createAgain.equals("y")) {
-			createAssignment(theSchool);
+			createAssignment();
 		}
 
 	}
 
-	public static void createStream(PrivateSchool theSchool) {
+	public static void createStream() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\n\nCREATE STREAM "
 				+ "\n******************");
@@ -219,26 +296,38 @@ public class CreateDataFromUserInput {
 		String streamTitle = Validator.loopAndGetValidString(sc, Validator.forLettersAndDigits);
 
 		Stream str = new Stream(streamTitle);
-		if (theSchool.getSchoolStreams().add(str) == false) {
-			System.out.println("\nThis stream has already been created!");
-			System.out.println("\nDo you want to create another Stream? y/n");
-			String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
-			if (createAgain.equals("y")) {
-				createStream(theSchool);
-			}
-			return;
+
+		DBUtils.createConnection();
+		int n = 0;
+		Statement st;
+		try {
+
+			st = DBUtils.getConn().createStatement();
+			n = st.executeUpdate("insert into stream(streamtitle)values ('" + str.getStreamTitle() + "')");
+			DBUtils.getConn().close();
+
+		} catch (SQLException ex) {
+			System.out.println("SQL ex");
 		}
+
+		if (n == 0) {
+			System.out.println("This stream has already been created!");
+			return;
+		} else {
+			System.out.println("Success");
+		}
+
 		System.out.println("\nStream created.");
 		System.out.println(str);
 
 		System.out.println("\nDo you want to create another Stream? y/n");
 		String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
 		if (createAgain.equals("y")) {
-			createStream(theSchool);
+			createStream();
 		}
 	}
 
-	public static void createClassroom(PrivateSchool theSchool) {
+	public static void createClassroom() {
 
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\n\nCREATE CLASSROOM "
@@ -247,37 +336,52 @@ public class CreateDataFromUserInput {
 		String classroomTitle = Validator.loopAndGetValidString(sc, Validator.forLettersAndDigits);
 
 		System.out.println("\nSelect a course");
-		Course cr =ChooseAndAssign.chooseSchoolObject(theSchool.getSchoolCourses());
+		Course cr = ChooseAndAssign.chooseAndGetCourse();
 		if (cr == null) {
-
+            System.out.println("No course found");
 			System.out.println("\nDo you want to create a Course? y/n");
 			String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
 			if (createAgain.equals("y")) {
-				createCourse(theSchool);
-				createClassroom( theSchool);
+				createCourse();
+				createClassroom();
 			}
 			return;
 		}
-		ClassRoom cl = new ClassRoom(classroomTitle, cr);
+            System.out.println(cr);
+		ClassRoom cl = new ClassRoom(classroomTitle);
 
-		if (theSchool.getSchoolClassrooms().add(cl) == false) {
-			System.out.println("\nThis Classroom has already been created!");
-			System.out.println("\nDo you want to create another Classroom? y/n");
+		DBUtils.createConnection();
+		int n = 0;
+		Statement st;
+		try {
 
-			String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
-			if (createAgain.equals("y")) {
-				createClassroom(theSchool);
-			}
-			return;
+			st = DBUtils.getConn().createStatement();
+			n = st.executeUpdate("insert into classroom(classroomtitle,courseId) values ('" + cl.getClassRoomTitle() + "'," + cr.getCourseId() + ")");
+			DBUtils.getConn().close();
+
+		} catch (SQLException ex) {
+
+			System.out.println("SQL ex");
+
 		}
-		System.out.println("\nClassRoom created.");
+
+		if (n == 0) {
+			System.out.println("This classroom has already been created!");
+			return;
+		} else {
+			System.out.println("Success");
+		}
+
+		System.out.println("\nClassroom created.");
 		System.out.println(cl);
+
 		System.out.println("\nDo you want to create another Classroom? y/n");
+
 		String createAgain = Validator.loopAndGetValidString(sc, Validator.forLettersOnly.and(s -> s.equals("y") || s.equals("n")));
 		if (createAgain.equals("y")) {
-			createClassroom(theSchool);
+			createClassroom();
 		}
+
 	}
 
-	
 }

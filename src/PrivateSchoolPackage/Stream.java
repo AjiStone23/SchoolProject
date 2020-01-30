@@ -5,7 +5,6 @@
  */
 package PrivateSchoolPackage;
 
-
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -13,17 +12,22 @@ import java.util.Objects;
  *
  * @author ajist
  */
-public class Stream implements IschoolObject{
+public class Stream {
 
 	private String streamTitle;
 
 	private HashSet<Course> streamCourses;
-    private int StreamCode;
-	
+	private int StreamId;
+
+	public Stream(String streamTitle, int StreamCode) {
+		this.streamTitle = streamTitle;
+		this.StreamId = StreamCode;
+	}
+
 	public Stream(String streamTitle) {
 		this.streamTitle = streamTitle;
 		this.streamCourses = new HashSet<>();
-		this.StreamCode=this.hashCode();
+
 	}
 
 	public String getStreamTitle() {
@@ -47,8 +51,8 @@ public class Stream implements IschoolObject{
 
 	}
 
-	public int getSchoolObjectCode() {
-		return StreamCode;
+	public int getSchoolObjectId() {
+		return StreamId;
 	}
 
 	@Override
@@ -80,6 +84,9 @@ public class Stream implements IschoolObject{
 	public String toString() {
 		return "Stream{" + "streamTitle=" + streamTitle + ", streamCourses=" + streamCourses + '}';
 	}
-	
+
+	public int getStreamId() {
+		return StreamId;
+	}
 
 }

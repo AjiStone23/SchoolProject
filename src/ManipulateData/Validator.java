@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Menu;
+package ManipulateData;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -21,7 +21,7 @@ public class Validator {
 	
 	public static Predicate<String> forFloat = s -> s.trim().matches("[0-9]++\\.[0-9]++");
 	public static Predicate<String> forPossitiveInt = s -> s.trim().matches("[0-9]++");
-	public static Predicate<String> forInt = s -> s.trim().matches("-?[0-9]++");
+	public static Predicate<String> forInt = s -> s.trim().matches("-?[0-9]{1,9}");
 	
 	public static Predicate<String> forDate = Validator::isValidDateSyntax;
 
@@ -53,6 +53,9 @@ public class Validator {
 		return true;
 
 	}
+	
+	
+	
 
 	public static int loopAndGetValidInt(Scanner sc, Predicate<Integer> r) {
 		int i;

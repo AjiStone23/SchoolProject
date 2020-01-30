@@ -6,47 +6,47 @@
 package PrivateSchoolPackage;
 
 import java.util.HashSet;
-import java.util.Objects;
+
 
 /**
  *
  * @author ajist
  */
-public class ClassRoom  implements IschoolObject{
-	
-private	String title;
-private	Course theCourse;
-private	HashSet<Student> students;
-private	HashSet<Trainer> trainers;
-private  int ClassroomCode;
+public class ClassRoom {
+
+	private String classRoomTitle;
+	private Course theCourse;
+	private HashSet<Student> students;
+	private HashSet<Trainer> trainers;
+	private int ClassRoomId;
+
+	public ClassRoom(String classRoomTitle, int ClassRoomId) {
+		this.classRoomTitle = classRoomTitle;
+		this.ClassRoomId = ClassRoomId;
+	}
+
+	public ClassRoom(String classRoomTitle) {
+		this.classRoomTitle = classRoomTitle;
+	}
 
 	public ClassRoom(String title, Course theCourse) {
-		this.title = title;
+		this.classRoomTitle = title;
 		this.theCourse = theCourse;
-		this.students=new HashSet<>();
-		this.trainers=new HashSet<>();
-		this.ClassroomCode= this.hashCode();
+		this.students = new HashSet<>();
+		this.trainers = new HashSet<>();
+
 	}
 
-	public String getTitle() {
-		return title;
+	public String getClassRoomTitle() {
+		return classRoomTitle;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setClassRoomTitle(String classRoomTitle) {
+		this.classRoomTitle = classRoomTitle;
 	}
 
 	public Course getTheCourse() {
 		return theCourse;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	@Override
-	public int getSchoolObjectCode() {
-		return ClassroomCode;
 	}
 
 	public void setTheCourse(Course theCourse) {
@@ -68,47 +68,22 @@ private  int ClassroomCode;
 	public void setTrainers(HashSet<Trainer> trainers) {
 		this.trainers = trainers;
 	}
-	
-	public boolean addStudent(Student st){
+
+	public boolean addStudent(Student st) {
 		return st.attendClassRoom(this);
 	}
-	public boolean addTrainer(Trainer tr){
+
+	public boolean addTrainer(Trainer tr) {
 		return tr.assignClassRoom(this);
 	}
 
-	@Override
-	public int hashCode() {
-		int hash = 3;
-		hash = 67 * hash + Objects.hashCode(this.title);
-		hash = 67 * hash + Objects.hashCode(this.theCourse);
-		return hash;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final ClassRoom other = (ClassRoom) obj;
-		if (!Objects.equals(this.title, other.title)) {
-			return false;
-		}
-		if (!Objects.equals(this.theCourse, other.theCourse)) {
-			return false;
-		}
-		return true;
+	public int getClassRoomId() {
+		return ClassRoomId;
 	}
 
 	@Override
 	public String toString() {
-		return "ClassRoom{" + "title=" + title + ", theCourse=" + theCourse.getTitle() + ", ClassroomCode=" + ClassroomCode + '}';
+		return "ClassRoom{" + "classRoomTitle=" + classRoomTitle + ", ClassRoomId=" + ClassRoomId + '}';
 	}
-	
-	
+
 }

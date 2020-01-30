@@ -12,17 +12,20 @@ import java.util.HashSet;
  *
  * @author ajist
  */
-public class Trainer extends Person implements IschoolObject{
+public class Trainer extends Person {
 
-private	HashSet<ClassRoom> assignedClassRooms;
-private	Subject subject;
+	private HashSet<ClassRoom> assignedClassRooms;
+	private Subject subject;
 
-	
+	public Trainer(String firstName, String lastName, LocalDate dateOfBirth, int personId) {
+		super(firstName, lastName, dateOfBirth, personId);
+	}
+
 	public Trainer(String firstName, String lastName, LocalDate dateofBirth) {
 
 		super(firstName, lastName, dateofBirth);
 		this.assignedClassRooms = new HashSet<>();
-        
+
 	}
 
 	public HashSet<ClassRoom> getAssignedClasses() {
@@ -40,13 +43,12 @@ private	Subject subject;
 	public void setSubject(Subject subject) {
 		this.subject = subject;
 	}
-	
-	public boolean assignClassRoom(ClassRoom classroom){
-		
+
+	public boolean assignClassRoom(ClassRoom classroom) {
+
 		this.assignedClassRooms.add(classroom);
 		return classroom.getTrainers().add(this);
-		
-		
+
 	}
 
 }

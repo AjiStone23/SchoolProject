@@ -15,13 +15,13 @@ public class PrivateSchool {
 
 	String schoolName;
 
-private	HashSet<Person> schoolPopulation;
-private	HashSet<Student> schoolStudents;
-private	HashSet<Trainer> schoolTrainers;
-private	HashSet<Course> schoolCourses;
-private	HashSet<ClassRoom> schoolClassrooms;
-private  HashSet<Stream> schoolStreams;
-private  HashSet<CourseAssignment> assignments;
+	private HashSet<Person> schoolPopulation;
+	private HashSet<Student> schoolStudents;
+	private HashSet<Trainer> schoolTrainers;
+	private HashSet<Course> schoolCourses;
+	private HashSet<ClassRoom> schoolClassrooms;
+	private HashSet<Stream> schoolStreams;
+	private HashSet<CourseAssignment> assignments;
 
 	public PrivateSchool(String schoolName) {
 		this.schoolName = schoolName;
@@ -30,8 +30,8 @@ private  HashSet<CourseAssignment> assignments;
 		this.schoolPopulation = new HashSet<>();
 		this.schoolStudents = new HashSet<>();
 		this.schoolTrainers = new HashSet<>();
-        this.schoolStreams= new HashSet<>();
-		this.assignments= new HashSet<>();
+		this.schoolStreams = new HashSet<>();
+		this.assignments = new HashSet<>();
 	}
 
 	public String getSchoolName() {
@@ -57,7 +57,6 @@ private  HashSet<CourseAssignment> assignments;
 	public HashSet<CourseAssignment> getAssignments() {
 		return assignments;
 	}
-	
 
 	public void setSchoolStudents(HashSet<Student> schoolStudents) {
 		this.schoolStudents = schoolStudents;
@@ -94,10 +93,5 @@ private  HashSet<CourseAssignment> assignments;
 	public void setSchoolStreams(HashSet<Stream> schoolStreams) {
 		this.schoolStreams = schoolStreams;
 	}
-	
-	
-	
-	
-	
 
 }
